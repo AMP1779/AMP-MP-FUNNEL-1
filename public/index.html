@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AMP — America's Top Music Producer | Producer Registration</title>
+<style>
+  :root {
+    --black: #070A0D;
+    --surface: #11161B;
+    --teal: #2BB8B0;
+    --teal-dark: #1A7A76;
+    --orange: #FF9A4D;
+    --white: #FFFFFF;
+    --silver: #C0C5CC;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+  }
+  a { color: var(--teal); }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  header.hero {
+    padding: 72px 0 56px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    line-height: 1.15;
+    margin: 0 0 16px;
+  }
+  .hero p.sub {
+    color: var(--silver);
+    font-size: clamp(15px, 2.4vw, 18px);
+    max-width: 620px;
+    margin: 0 auto 32px;
+  }
+  .cta-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    font-size: 15px;
+  }
+  .btn-primary { background: var(--teal); color: var(--black); }
+  .btn-primary:hover { background: var(--teal-dark); color: var(--white); }
+  .btn-secondary { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.25); }
+  section.why { padding: 56px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  section.why h2 { font-size: 26px; margin-bottom: 24px; }
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .why-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .why-card h3 { margin: 0 0 8px; color: var(--orange); font-size: 16px; }
+  .why-card p { margin: 0; color: var(--silver); font-size: 14px; line-height: 1.5; }
+  section.form-section { padding: 64px 0 96px; }
+  section.form-section h2 { font-size: 26px; margin-bottom: 8px; }
+  section.form-section p.intro { color: var(--silver); margin-bottom: 32px; }
+  form {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 28px;
+    display: grid;
+    gap: 18px;
+  }
+  .field { display: grid; gap: 6px; }
+  label { font-size: 13px; color: var(--silver); font-weight: 600; }
+  input, textarea {
+    background: #0C1116;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--white);
+    font-size: 15px;
+    font-family: inherit;
+  }
+  input:focus, textarea:focus { outline: 2px solid var(--teal); border-color: var(--teal); }
+  textarea { resize: vertical; min-height: 90px; }
+  .consent-row { display: flex; gap: 10px; align-items: flex-start; }
+  .consent-row input { width: 18px; height: 18px; margin-top: 3px; }
+  .consent-row label { color: var(--silver); font-weight: 400; font-size: 13px; }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 640px) { .row-2, .why-grid { grid-template-columns: 1fr; } }
+  #submitBtn { justify-self: start; }
+  #formMsg { font-size: 14px; margin-top: 4px; }
+  #formMsg.error { color: #FF6B6B; white-space: pre-line; }
+  #formMsg.success { color: var(--teal); }
+  #successState {
+    display: none;
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 40px;
+    text-align: center;
+  }
+  #successState h3 { color: var(--teal); font-size: 22px; margin-bottom: 8px; }
+  #successState p { color: var(--silver); }
+  footer { text-align: center; padding: 32px 0; color: var(--silver); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>Behind every great record is a producer.<br/>Now it's your turn to be seen.</h1>
+    <p class="sub">For decades, producers have shaped culture while remaining behind the scenes. AMP changes that.</p>
+    <div class="cta-row">
+      <a href="#register" class="btn btn-primary">Apply as a founding producer</a>
+      <a href="#why" class="btn btn-secondary">Why join AMP</a>
+    </div>
+  </div>
+</header>
+
+<section class="why" id="why">
+  <div class="wrap">
+    <h2>Why join AMP</h2>
+    <div class="why-grid">
+      <div class="why-card"><h3>Founding access</h3><p>Be part of the first wave of producers shaping AMP from day one.</p></div>
+      <div class="why-card"><h3>Real visibility</h3><p>Get discovered by artists, brands, and fans who've never had a way in before.</p></div>
+      <div class="why-card"><h3>Built for the long run</h3><p>AMP is built to become the world's premier destination for music producers.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="form-section" id="register">
+  <div class="wrap">
+    <h2>Producer Registration</h2>
+    <p class="intro">Tell us about you. It takes about two minutes.</p>
+
+    <form id="regForm" novalidate>
+      <div class="field">
+        <label for="fullName">Full name *</label>
+        <input id="fullName" name="fullName" type="text" required minlength="2" autocomplete="name" />
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label for="email">Email *</label>
+          <input id="email" name="email" type="email" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="phone">Phone (optional)</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="role">Producer role / genre *</label>
+        <input id="role" name="role" type="text" placeholder="e.g. Hip-hop producer, mixing engineer" required minlength="2" />
+      </div>
+      <div class="field">
+        <label for="portfolioUrl">Portfolio / beat link (optional)</label>
+        <input id="portfolioUrl" name="portfolioUrl" type="url" placeholder="https://" />
+      </div>
+      <div class="field">
+        <label for="message">Anything else we should know? (optional)</label>
+        <textarea id="message" name="message"></textarea>
+      </div>
+      <div class="consent-row">
+        <input id="consent" name="consent" type="checkbox" required />
+        <label for="consent">I agree to AMP's terms and to be contacted about my producer application. *</label>
+      </div>
+      <div>
+        <button id="submitBtn" class="btn btn-primary" type="submit">Submit application</button>
+      </div>
+      <div id="formMsg" role="status" aria-live="polite"></div>
+    </form>
+
+    <div id="successState">
+      <h3>You're in.</h3>
+      <p>Thanks for applying — we've received your registration and will follow up by email.</p>
+    </div>
+  </div>
+</section>
+
+<footer>&copy; 2026 AMP — America's Top Music Producer</footer>
+
+<script>
+  const form = document.getElementById('regForm');
+  const msgEl = document.getElementById('formMsg');
+  const submitBtn = document.getElementById('submitBtn');
+  const successState = document.getElementById('successState');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msgEl.className = '';
+    msgEl.textContent = '';
+
+    const payload = {
+      fullName: form.fullName.value.trim(),
+      email: form.email.value.trim(),
+      phone: form.phone.value.trim(),
+      role: form.role.value.trim(),
+      portfolioUrl: form.portfolioUrl.value.trim(),
+      message: form.message.value.trim(),
+      consent: form.consent.checked,
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        form.style.display = 'none';
+        successState.style.display = 'block';
+        successState.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        msgEl.className = 'error';
+        msgEl.textContent = (data.errors || ['Something went wrong. Please try again.']).join('\n');
+      }
+    } catch (err) {
+      msgEl.className = 'error';
+      msgEl.textContent = 'Network error — please check your connection and try again.';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit application';
+    }
+  });
+</script>
+
+</body>
+</html>
