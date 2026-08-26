@@ -12,10 +12,15 @@ if (!DATABASE_URL) {
   console.warn('WARNING: DATABASE_URL is not set. API requests will return 503 until it is configured.');
 }
 
+// Railway's private network (host ends in .railway.internal) does not support
+// SSL between services in the same project. Public/external Postgres hosts
+// generally require it. Decide based on the host, not just NODE_ENV.
+const needsSSL = DATABASE_URL ? !/railway\.internal/.test(DATABASE_URL) && /railway\.app|amazonaws|render\.com|supabase\.co/.test(DATABASE_URL) : false;
+
 const pool = DATABASE_URL
   ? new Pool({
       connectionString: DATABASE_URL,
-      ssl: DATABASE_URL.includes('railway') || process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
+      ssl: needsSSL ? { rejectUnauthorized: false } : false,
     })
   : null;
 
@@ -75,7 +80,7 @@ app.get('/api/health', async (req, res) => {
     await pool.query('SELECT 1');
     res.json({ status: 'ok', database: 'connected', time: new Date().toISOString() });
   } catch (err) {
-    res.status(503).json({ status: 'degraded', database: 'unreachable' });
+    res.status(503).json({ status: 'degraded', database: 'unreachable', error: err.message });
   }
 });
 
