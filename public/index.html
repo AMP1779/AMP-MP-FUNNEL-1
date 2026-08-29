@@ -1,237 +1,992 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AMP — America's Top Music Producer | Producer Registration</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMP — Producer Application</title>
 <style>
-  :root {
-    --black: #070A0D;
-    --surface: #11161B;
-    --teal: #2BB8B0;
-    --teal-dark: #1A7A76;
-    --orange: #FF9A4D;
-    --white: #FFFFFF;
-    --silver: #C0C5CC;
-    --radius: 16px;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--black);
-    color: var(--white);
-    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
-  }
-  a { color: var(--teal); }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
-  header.hero {
-    padding: 72px 0 56px;
-    text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .hero h1 {
-    font-size: clamp(28px, 5vw, 48px);
-    line-height: 1.15;
-    margin: 0 0 16px;
-  }
-  .hero p.sub {
-    color: var(--silver);
-    font-size: clamp(15px, 2.4vw, 18px);
-    max-width: 620px;
-    margin: 0 auto 32px;
-  }
-  .cta-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-  .btn {
-    display: inline-block;
-    padding: 14px 28px;
-    border-radius: 999px;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    font-size: 15px;
-  }
-  .btn-primary { background: var(--teal); color: var(--black); }
-  .btn-primary:hover { background: var(--teal-dark); color: var(--white); }
-  .btn-secondary { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.25); }
-  section.why { padding: 56px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  section.why h2 { font-size: 26px; margin-bottom: 24px; }
-  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .why-card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 20px;
-  }
-  .why-card h3 { margin: 0 0 8px; color: var(--orange); font-size: 16px; }
-  .why-card p { margin: 0; color: var(--silver); font-size: 14px; line-height: 1.5; }
-  section.form-section { padding: 64px 0 96px; }
-  section.form-section h2 { font-size: 26px; margin-bottom: 8px; }
-  section.form-section p.intro { color: var(--silver); margin-bottom: 32px; }
-  form {
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 28px;
-    display: grid;
-    gap: 18px;
-  }
-  .field { display: grid; gap: 6px; }
-  label { font-size: 13px; color: var(--silver); font-weight: 600; }
-  input, textarea {
-    background: #0C1116;
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 10px;
-    padding: 12px 14px;
-    color: var(--white);
-    font-size: 15px;
-    font-family: inherit;
-  }
-  input:focus, textarea:focus { outline: 2px solid var(--teal); border-color: var(--teal); }
-  textarea { resize: vertical; min-height: 90px; }
-  .consent-row { display: flex; gap: 10px; align-items: flex-start; }
-  .consent-row input { width: 18px; height: 18px; margin-top: 3px; }
-  .consent-row label { color: var(--silver); font-weight: 400; font-size: 13px; }
-  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-  @media (max-width: 640px) { .row-2, .why-grid { grid-template-columns: 1fr; } }
-  #submitBtn { justify-self: start; }
-  #formMsg { font-size: 14px; margin-top: 4px; }
-  #formMsg.error { color: #FF6B6B; white-space: pre-line; }
-  #formMsg.success { color: var(--teal); }
-  #successState {
-    display: none;
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 40px;
-    text-align: center;
-  }
-  #successState h3 { color: var(--teal); font-size: 22px; margin-bottom: 8px; }
-  #successState p { color: var(--silver); }
-  footer { text-align: center; padding: 32px 0; color: var(--silver); font-size: 13px; }
+:root{
+  --black:#070A0D;
+  --surface:#11161B;
+  --teal:#2BB8B0;
+  --teal-dark:#1A7A76;
+  --orange:#FF9A4D;
+  --white:#FFFFFF;
+  --silver:#C0C5CC;
+  --danger:#FF6B6B;
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--black);color:var(--white);
+  font-family:Outfit,Inter,system-ui,sans-serif;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh}
+.header{
+  border-bottom:1px solid rgba(255,255,255,.08);
+  padding:18px 20px;
+}
+.header-inner{
+  max-width:900px;margin:auto;display:flex;
+  align-items:center;justify-content:space-between;gap:16px
+}
+.logo{font-weight:900;font-size:28px;letter-spacing:-2px}
+.progress{
+  height:4px;background:#1a2026;
+  position:fixed;top:0;left:0;right:0;z-index:20
+}
+.progress-bar{height:100%;background:var(--teal);width:7.14%;transition:.25s}
+.wrap{max-width:900px;margin:auto;padding:0 20px}
+.screen{display:none;padding:55px 0 90px}
+.screen.active{display:block}
+.hero{text-align:center;padding:70px 0}
+h1{font-size:clamp(32px,7vw,58px);line-height:1.05;margin:0 0 20px}
+h2{font-size:32px;margin:0 0 12px}
+h3{margin:0 0 8px}
+p{line-height:1.6}
+.muted{color:var(--silver)}
+.card{
+  background:var(--surface);border-radius:var(--radius);
+  padding:24px;margin:18px 0
+}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{display:grid;gap:7px;margin-bottom:17px}
+label{font-size:14px;color:var(--silver);font-weight:600}
+input,textarea,select{
+  width:100%;background:#0c1116;color:var(--white);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:10px;padding:13px 14px;outline:none
+}
+input:focus,textarea:focus,select:focus{
+  border-color:var(--teal);box-shadow:0 0 0 2px rgba(43,184,176,.15)
+}
+textarea{min-height:110px;resize:vertical}
+.btn{
+  border:0;border-radius:999px;padding:14px 24px;
+  font-weight:800;min-height:48px
+}
+.primary{background:var(--teal);color:var(--black)}
+.secondary{
+  background:transparent;color:var(--white);
+  border:1px solid rgba(255,255,255,.22)
+}
+.danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}
+.actions{
+  display:flex;justify-content:space-between;gap:12px;
+  margin-top:28px;flex-wrap:wrap
+}
+.actions-right{display:flex;gap:10px;flex-wrap:wrap}
+.error{
+  color:var(--danger);background:rgba(255,107,107,.08);
+  border:1px solid rgba(255,107,107,.25);
+  padding:12px;border-radius:10px;margin:12px 0;display:none
+}
+.notice{
+  color:var(--silver);background:#0c1116;
+  padding:12px;border-radius:10px;margin:12px 0
+}
+.choice-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:16px
+}
+.choice{
+  text-align:left;background:var(--surface);color:var(--white);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--radius);padding:24px
+}
+.choice:hover,.choice.selected{border-color:var(--teal)}
+.choice strong{display:block;margin-bottom:7px}
+.percent{
+  font-size:48px;font-weight:900;color:var(--teal)
+}
+.strength{
+  height:12px;background:#20262c;border-radius:99px;overflow:hidden
+}
+.strength > div{height:100%;background:var(--teal);transition:.3s}
+.pill{
+  display:inline-block;padding:6px 10px;border-radius:999px;
+  background:#172126;color:var(--teal);font-size:12px;font-weight:700
+}
+.summary{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px
+}
+.summary div{
+  background:#0c1116;padding:14px;border-radius:10px
+}
+.summary small{display:block;color:var(--silver);margin-bottom:5px}
+.video-box{
+  background:#050709;border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--radius);padding:20px;text-align:center
+}
+video{width:100%;max-height:430px;border-radius:12px;background:#000}
+.upload{
+  border:1px dashed rgba(255,255,255,.25);
+  padding:25px;border-radius:var(--radius);text-align:center
+}
+.status{text-align:center;padding:70px 0}
+.big-check{font-size:64px;color:var(--teal)}
+footer{text-align:center;color:var(--silver);padding:30px}
+@media(max-width:650px){
+  .grid,.choice-grid,.summary{grid-template-columns:1fr}
+  .screen{padding-top:35px}
+  .hero{padding:45px 0}
+  .actions{flex-direction:column}
+  .actions-right{width:100%}
+  .actions button{width:100%}
+}
 </style>
 </head>
-<body>
 
-<header class="hero">
-  <div class="wrap">
-    <h1>Behind every great record is a producer.<br/>Now it's your turn to be seen.</h1>
-    <p class="sub">For decades, producers have shaped culture while remaining behind the scenes. AMP changes that.</p>
-    <div class="cta-row">
-      <a href="#register" class="btn btn-primary">Apply as a founding producer</a>
-      <a href="#why" class="btn btn-secondary">Why join AMP</a>
-    </div>
+<body>
+<div class="progress"><div id="progressBar" class="progress-bar"></div></div>
+
+<div class="app">
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">AMP</div>
+    <div id="saveStatus" class="muted">Ready</div>
   </div>
 </header>
 
-<section class="why" id="why">
-  <div class="wrap">
-    <h2>Why join AMP</h2>
-    <div class="why-grid">
-      <div class="why-card"><h3>Founding access</h3><p>Be part of the first wave of producers shaping AMP from day one.</p></div>
-      <div class="why-card"><h3>Real visibility</h3><p>Get discovered by artists, brands, and fans who've never had a way in before.</p></div>
-      <div class="why-card"><h3>Built for the long run</h3><p>AMP is built to become the world's premier destination for music producers.</p></div>
-    </div>
-  </div>
+<main>
+
+<!-- 01 LANDING -->
+<section id="s1" class="screen active">
+<div class="wrap hero">
+  <span class="pill">AMP PRODUCER APPLICATION</span>
+  <h1>Behind every great record is a producer.</h1>
+  <p class="muted">Now it's your turn to be seen.</p>
+  <p class="muted">Apply to become part of AMP's founding producer community.</p>
+  <button class="btn primary" onclick="go(2)">Start Application</button>
+</div>
 </section>
 
-<section class="form-section" id="register">
-  <div class="wrap">
-    <h2>Producer Registration</h2>
-    <p class="intro">Tell us about you. It takes about two minutes.</p>
-
-    <form id="regForm" novalidate>
-      <div class="field">
-        <label for="fullName">Full name *</label>
-        <input id="fullName" name="fullName" type="text" required minlength="2" autocomplete="name" />
-      </div>
-      <div class="row-2">
-        <div class="field">
-          <label for="email">Email *</label>
-          <input id="email" name="email" type="email" required autocomplete="email" />
-        </div>
-        <div class="field">
-          <label for="phone">Phone (optional)</label>
-          <input id="phone" name="phone" type="tel" autocomplete="tel" />
-        </div>
-      </div>
-      <div class="field">
-        <label for="role">Producer role / genre *</label>
-        <input id="role" name="role" type="text" placeholder="e.g. Hip-hop producer, mixing engineer" required minlength="2" />
-      </div>
-      <div class="field">
-        <label for="portfolioUrl">Portfolio / beat link (optional)</label>
-        <input id="portfolioUrl" name="portfolioUrl" type="url" placeholder="https://" />
-      </div>
-      <div class="field">
-        <label for="message">Anything else we should know? (optional)</label>
-        <textarea id="message" name="message"></textarea>
-      </div>
-      <div class="consent-row">
-        <input id="consent" name="consent" type="checkbox" required />
-        <label for="consent">I agree to AMP's terms and to be contacted about my producer application. *</label>
-      </div>
-      <div>
-        <button id="submitBtn" class="btn btn-primary" type="submit">Submit application</button>
-      </div>
-      <div id="formMsg" role="status" aria-live="polite"></div>
-    </form>
-
-    <div id="successState">
-      <h3>You're in.</h3>
-      <p>Thanks for applying — we've received your registration and will follow up by email.</p>
-    </div>
+<!-- 02 REGISTRATION METHOD -->
+<section id="s2" class="screen">
+<div class="wrap">
+  <h2>How would you like to register?</h2>
+  <p class="muted">Choose the method that's easiest for you.</p>
+  <div class="choice-grid">
+    <button class="choice" onclick="selectMethod('voice')">
+      <strong>🎙 Voice Registration</strong>
+      <span class="muted">Answer questions using your voice.</span>
+    </button>
+    <button class="choice" onclick="selectMethod('manual')">
+      <strong>⌨ Manual Registration</strong>
+      <span class="muted">Enter your information yourself.</span>
+    </button>
   </div>
+  <div id="methodError" class="error"></div>
+  <div class="actions">
+    <button class="btn secondary" onclick="go(1)">Back</button>
+  </div>
+</div>
 </section>
 
-<footer>&copy; 2026 AMP — America's Top Music Producer</footer>
+<!-- 03 VOICE -->
+<section id="s3" class="screen">
+<div class="wrap">
+  <h2>Voice Registration</h2>
+  <p class="muted">Speak your information. You can switch to manual registration at any time.</p>
+  <div class="card">
+    <div id="voiceQuestion"><strong>What's your full name?</strong></div>
+    <div class="video-box" style="margin-top:20px">
+      <div id="voiceStatus" class="muted">Ready</div>
+      <button id="voiceBtn" class="btn primary" onclick="voiceToggle()">Start Speaking</button>
+    </div>
+  </div>
+  <div id="voiceError" class="error"></div>
+  <div class="actions">
+    <button class="btn secondary" onclick="go(2)">Back</button>
+    <div class="actions-right">
+      <button class="btn secondary" onclick="go(4)">Use Manual Registration</button>
+      <button class="btn primary" onclick="finishVoice()">Continue</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 04 MANUAL -->
+<section id="s4" class="screen">
+<div class="wrap">
+  <h2>Registration</h2>
+  <p class="muted">Tell us who you are.</p>
+  <div class="card">
+    <div class="grid">
+      <div class="field"><label>Full Name *</label><input id="fullName" autocomplete="name"></div>
+      <div class="field"><label>Producer Name *</label><input id="producerName"></div>
+      <div class="field"><label>Email *</label><input id="email" type="email" autocomplete="email"></div>
+      <div class="field"><label>Location *</label><input id="location" placeholder="City, State/Country"></div>
+      <div class="field"><label>Genre *</label><input id="genre" placeholder="Hip-hop, R&B, Pop..."></div>
+      <div class="field"><label>Phone</label><input id="phone" type="tel"></div>
+    </div>
+    <label style="display:flex;gap:10px;align-items:flex-start">
+      <input id="consent" type="checkbox" style="width:20px">
+      <span>I agree to AMP's terms and to be contacted about my application. *</span>
+    </label>
+  </div>
+  <div id="regError" class="error"></div>
+  <div class="actions">
+    <button class="btn secondary" onclick="go(2)">Back</button>
+    <button class="btn primary" onclick="register()">Save & Continue</button>
+  </div>
+</div>
+</section>
+
+<!-- 05 PROFILE -->
+<section id="s5" class="screen">
+<div class="wrap">
+  <h2>Producer Profile</h2>
+  <p class="muted">Complete your core producer profile.</p>
+  <div class="card">
+    <div class="grid">
+      <div class="field"><label>Full Name *</label><input id="pFullName"></div>
+      <div class="field"><label>Producer Name *</label><input id="pProducerName"></div>
+      <div class="field"><label>Email *</label><input id="pEmail" type="email"></div>
+      <div class="field"><label>Location *</label><input id="pLocation"></div>
+      <div class="field"><label>Genre *</label><input id="pGenre"></div>
+    </div>
+    <div class="field"><label>Bio</label><textarea id="bio"></textarea></div>
+  </div>
+  <div id="profileError" class="error"></div>
+  <div class="actions">
+    <button class="btn secondary" onclick="go(4)">Back</button>
+    <button class="btn primary" onclick="saveProfile()">Save & Continue</button>
+  </div>
+</div>
+</section>
+
+<!-- 06 DNA -->
+<section id="s6" class="screen">
+<div class="wrap">
+  <h2>Producer DNA</h2>
+  <p class="muted">Tell us what makes your production unique.</p>
+  <div class="card">
+    <div class="field"><label>What best describes your sound? *</label><input id="sound"></div>
+    <div class="field"><label>Who or what influences your production? *</label><textarea id="influences"></textarea></div>
+    <div class="field"><label>What is your strongest production skill? *</label><input id="strength"></div>
+    <div class="field"><label>What are you trying to accomplish with your music? *</label><textarea id="mission"></textarea></div>
+  </div>
+  <div id="dnaError" class="error"></div>
+  <div class="actions">
+    <button class="btn secondary" onclick="go(5)">Back</button>
+    <button class="btn primary" onclick="saveDNA()">Save & Continue</button>
+  </div>
+</div>
+</section>
+
+<!-- 07 STRENGTH -->
+<section id="s7" class="screen">
+<div class="wrap">
+  <h2>Your Profile Strength</h2>
+  <p class="muted">Based on the information you've actually completed.</p>
+  <div class="card" style="text-align:center">
+    <div id="strengthPercent" class="percent">0%</div>
+    <div class="strength"><div id="strengthBar"></div></div>
+    <p id="strengthText" class="muted"></p>
+  </div>
+  <div class="actions">
+    <button class="btn secondary" onclick="go(6)">Back</button>
+    <button class="btn primary" onclick="go(8)">Continue</button>
+  </div>
+</div>
+</section>
+
+<!-- 08 PORTFOLIO -->
+<section id="s8" class="screen">
+<div class="wrap">
+  <h2>Portfolio / Top 3</h2>
+  <p class="muted">Give AMP your three strongest examples.</p>
+  <div class="card">
+    <div class="field"><label>Portfolio / Website</label><input id="portfolioUrl" type="url" placeholder="https://"></div>
+    <div class="field"><label>Top 3 — #1 *</label><input id="top1" placeholder="Track/project + link"></div>
+    <div class="field"><label>Top 3 — #2 *</label><input id="top2" placeholder="Track/project + link"></div>
+    <div class="field"><label>Top 3 — #3 *</label><input id="top3" placeholder="Track/project + link"></div>
+  </div>
+  <div id="portfolioError" class="error"></div>
+  <div class="actions">
+    <button class="btn secondary" onclick="go(7)">Back</button>
+    <button class="btn primary" onclick="savePortfolio()">Save & Continue</button>
+  </div>
+</div>
+</section>
+
+<!-- 09 INTERVIEW -->
+<section id="s9" class="screen">
+<div class="wrap">
+  <h2>Producer Interview</h2>
+  <p class="muted">Record your answer. You can review and re-record before using it.</p>
+  <div class="card">
+    <h3>Why should AMP know your name?</h3>
+    <p class="muted">Tell us about your production journey, your sound, and what makes you different.</p>
+    <div class="video-box">
+      <video id="preview" autoplay muted playsinline></video>
+      <div id="recordStatus" class="muted">Not recording</div>
+      <div class="actions" style="justify-content:center">
+        <button id="recordBtn" class="btn primary" onclick="toggleRecording()">Start Recording</button>
+        <button class="btn secondary" onclick="resetRecording()">Re-record</button>
+      </div>
+    </div>
+    <div id="recordError" class="error"></div>
+    <div class="notice">Your interview must be successfully recorded before you can submit your application.</div>
+  </div>
+  <div class="actions">
+    <button class="btn secondary" onclick="go(8)">Back</button>
+    <button id="interviewContinue" class="btn primary" onclick="saveInterview()" disabled>Use Answer & Continue</button>
+  </div>
+</div>
+</section>
+
+<!-- 10 REVIEW -->
+<section id="s10" class="screen">
+<div class="wrap">
+  <h2>Review Your Application</h2>
+  <p class="muted">Review the information you actually entered before submitting.</p>
+  <div id="reviewContent" class="card"></div>
+  <div id="reviewError" class="error"></div>
+  <div class="actions">
+    <button class="btn secondary" onclick="go(9)">Back</button>
+    <button class="btn primary" onclick="go(11)">Continue to Application Check</button>
+  </div>
+</div>
+</section>
+
+<!-- 11 CHECK -->
+<section id="s11" class="screen">
+<div class="wrap">
+  <h2>Application Check</h2>
+  <p class="muted">We verify the required information before submission.</p>
+  <div id="checkContent" class="card"></div>
+  <div id="checkError" class="error"></div>
+  <div class="actions">
+    <button class="btn secondary" onclick="go(10)">Back</button>
+    <button id="submitGo" class="btn primary" onclick="submitApplication()" disabled>Submit Application</button>
+  </div>
+</div>
+</section>
+
+<!-- 12 SUBMIT -->
+<section id="s12" class="screen">
+<div class="wrap status">
+  <h2>Submitting your application…</h2>
+  <p class="muted">We're securely saving your application.</p>
+  <div id="submitError" class="error"></div>
+</div>
+</section>
+
+<!-- 13 SUCCESS -->
+<section id="s13" class="screen">
+<div class="wrap status">
+  <div class="big-check">✓</div>
+  <h2>Application Submitted</h2>
+  <p class="muted">Your application has been confirmed by AMP.</p>
+  <div id="successDetails" class="card"></div>
+  <button class="btn primary" onclick="go(14)">Open Application Center</button>
+</div>
+</section>
+
+<!-- 14 APPLICATION CENTER -->
+<section id="s14" class="screen">
+<div class="wrap">
+  <h2>Application Center</h2>
+  <p class="muted">Your server-backed application status.</p>
+  <div id="centerContent" class="card">Loading…</div>
+  <div id="centerError" class="error"></div>
+  <div class="actions">
+    <button class="btn secondary" onclick="loadApplicationCenter()">Refresh</button>
+  </div>
+</div>
+</section>
+
+</main>
+
+<footer>© 2026 AMP — America's Top Music Producer</footer>
+</div>
 
 <script>
-  const form = document.getElementById('regForm');
-  const msgEl = document.getElementById('formMsg');
-  const submitBtn = document.getElementById('submitBtn');
-  const successState = document.getElementById('successState');
+const TOTAL=14;
+let state={
+  step:1,
+  applicationId:null,
+  registrationMethod:null,
+  producer:{},
+  dna:{},
+  portfolio:{},
+  interview:{completed:false},
+  submitted:false
+};
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    msgEl.className = '';
-    msgEl.textContent = '';
+let mediaRecorder=null;
+let mediaStream=null;
+let recordedBlob=null;
+let recognition=null;
 
-    const payload = {
-      fullName: form.fullName.value.trim(),
-      email: form.email.value.trim(),
-      phone: form.phone.value.trim(),
-      role: form.role.value.trim(),
-      portfolioUrl: form.portfolioUrl.value.trim(),
-      message: form.message.value.trim(),
-      consent: form.consent.checked,
+const $=id=>document.getElementById(id);
+
+function analytics(event,data={}){
+  window.dataLayer=window.dataLayer||[];
+  window.dataLayer.push({event,...data,timestamp:new Date().toISOString()});
+}
+
+function saveLocal(){
+  localStorage.setItem('amp_application_draft',JSON.stringify(state));
+}
+
+function loadLocal(){
+  try{
+    const raw=localStorage.getItem('amp_application_draft');
+    if(raw) state={...state,...JSON.parse(raw)};
+  }catch(e){}
+}
+
+function setSaveStatus(text){
+  $('saveStatus').textContent=text;
+}
+
+function go(step){
+  if(step<1||step>TOTAL)return;
+
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  $('s'+step).classList.add('active');
+  state.step=step;
+
+  const pct=(step/TOTAL)*100;
+  $('progressBar').style.width=pct+'%';
+
+  if(step===5)populateProfile();
+  if(step===7)calculateStrength();
+  if(step===10){
+    renderReview();
+    analytics('review_started');
+  }
+  if(step===11)runApplicationCheck();
+  if(step===14)loadApplicationCenter();
+
+  saveLocal();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function errorBox(id,message){
+  const el=$(id);
+  el.textContent=message;
+  el.style.display=message?'block':'none';
+}
+
+function selectMethod(method){
+  state.registrationMethod=method;
+  analytics('registration_method_selected',{method});
+  if(method==='voice')go(3);
+  else go(4);
+}
+
+function validateRegistration(){
+  const errors=[];
+  if(!$('fullName').value.trim())errors.push('Full Name is required.');
+  if(!$('producerName').value.trim())errors.push('Producer Name is required.');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($('email').value.trim()))
+    errors.push('A valid email is required.');
+  if(!$('location').value.trim())errors.push('Location is required.');
+  if(!$('genre').value.trim())errors.push('Genre is required.');
+  if(!$('consent').checked)errors.push('Consent is required.');
+  return errors;
+}
+
+async function register(){
+  const errors=validateRegistration();
+  if(errors.length){
+    errorBox('regError',errors.join('\n'));
+    return;
+  }
+
+  errorBox('regError','');
+  setSaveStatus('Saving…');
+  analytics('registration_started');
+
+  const payload={
+    fullName:$('fullName').value.trim(),
+    email:$('email').value.trim(),
+    phone:$('phone').value.trim(),
+    role:$('genre').value.trim(),
+    portfolioUrl:'',
+    message:'',
+    consent:$('consent').checked
+  };
+
+  try{
+    const res=await fetch('/api/register',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    const data=await res.json();
+
+    if(!res.ok||!data.success)
+      throw new Error((data.errors||['Registration failed.']).join('\n'));
+
+    state.applicationId=data.id;
+    state.producer={
+      fullName:payload.fullName,
+      producerName:$('producerName').value.trim(),
+      email:payload.email,
+      location:$('location').value.trim(),
+      genre:payload.role,
+      phone:payload.phone,
+      consent:true
     };
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting...';
+    saveLocal();
+    setSaveStatus(data.resumed?'Draft resumed':'Saved');
+    go(5);
+  }catch(err){
+    errorBox('regError',err.message||'Unable to register. Please retry.');
+    setSaveStatus('Save failed');
+    analytics('application_error',{stage:'registration'});
+  }
+}
 
-    try {
-      const res = await fetch('/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
+function populateProfile(){
+  const p=state.producer;
+  $('pFullName').value=p.fullName||'';
+  $('pProducerName').value=p.producerName||'';
+  $('pEmail').value=p.email||'';
+  $('pLocation').value=p.location||'';
+  $('pGenre').value=p.genre||'';
+  $('bio').value=p.bio||'';
+}
 
-      if (res.ok && data.success) {
-        form.style.display = 'none';
-        successState.style.display = 'block';
-        successState.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      } else {
-        msgEl.className = 'error';
-        msgEl.textContent = (data.errors || ['Something went wrong. Please try again.']).join('\n');
-      }
-    } catch (err) {
-      msgEl.className = 'error';
-      msgEl.textContent = 'Network error — please check your connection and try again.';
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit application';
-    }
+async function patchApplication(payload){
+  if(!state.applicationId)return;
+  const res=await fetch('/api/applications/'+encodeURIComponent(state.applicationId),{
+    method:'PATCH',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
   });
-</script>
+  const data=await res.json();
+  if(!res.ok||!data.success)
+    throw new Error((data.errors||['Unable to save application.']).join('\n'));
+}
 
+async function saveProfile(){
+  const p={
+    fullName:$('pFullName').value.trim(),
+    producerName:$('pProducerName').value.trim(),
+    email:$('pEmail').value.trim(),
+    location:$('pLocation').value.trim(),
+    genre:$('pGenre').value.trim(),
+    bio:$('bio').value.trim(),
+    consent:state.producer.consent
+  };
+
+  const missing=Object.entries({
+    'Full Name':p.fullName,
+    'Producer Name':p.producerName,
+    'Email':p.email,
+    'Location':p.location,
+    'Genre':p.genre
+  }).filter(([,v])=>!v).map(([k])=>k+' is required.');
+
+  if(missing.length){
+    errorBox('profileError',missing.join('\n'));
+    return;
+  }
+
+  try{
+    errorBox('profileError','');
+    state.producer={...state.producer,...p};
+    await patchApplication({
+      phone:state.producer.phone||null,
+      message:p.bio||null
+    });
+    analytics('profile_completed');
+    saveLocal();
+    setSaveStatus('Saved');
+    go(6);
+  }catch(err){
+    errorBox('profileError',err.message);
+  }
+}
+
+async function saveDNA(){
+  const dna={
+    sound:$('sound').value.trim(),
+    influences:$('influences').value.trim(),
+    strength:$('strength').value.trim(),
+    mission:$('mission').value.trim()
+  };
+
+  if(Object.values(dna).some(v=>!v)){
+    errorBox('dnaError','Please complete all Producer DNA fields.');
+    return;
+  }
+
+  try{
+    errorBox('dnaError','');
+    state.dna=dna;
+    await patchApplication({producerDna:dna});
+    analytics('dna_completed');
+    saveLocal();
+    setSaveStatus('Saved');
+    go(7);
+  }catch(err){
+    errorBox('dnaError',err.message);
+  }
+}
+
+function calculateStrength(){
+  const checks=[
+    state.producer.fullName,
+    state.producer.producerName,
+    state.producer.email,
+    state.producer.location,
+    state.producer.genre,
+    state.dna.sound,
+    state.dna.influences,
+    state.dna.strength,
+    state.dna.mission,
+    state.portfolio.top1,
+    state.portfolio.top2,
+    state.portfolio.top3,
+    state.interview.completed
+  ];
+  const completed=checks.filter(Boolean).length;
+  const pct=Math.round((completed/checks.length)*100);
+  $('strengthPercent').textContent=pct+'%';
+  $('strengthBar').style.width=pct+'%';
+  $('strengthText').textContent=
+    pct>=90?'Excellent — your profile is nearly complete.':
+    pct>=70?'Strong profile — keep going.':
+    'Complete more sections to strengthen your application.';
+  state.producer.profileStrength=pct;
+  saveLocal();
+}
+
+async function savePortfolio(){
+  const portfolio={
+    portfolioUrl:$('portfolioUrl').value.trim(),
+    top1:$('top1').value.trim(),
+    top2:$('top2').value.trim(),
+    top3:$('top3').value.trim()
+  };
+
+  if(!portfolio.top1||!portfolio.top2||!portfolio.top3){
+    errorBox('portfolioError','All three Top 3 entries are required.');
+    return;
+  }
+
+  try{
+    errorBox('portfolioError','');
+    state.portfolio=portfolio;
+    await patchApplication({portfolio});
+    analytics('portfolio_completed');
+    saveLocal();
+    setSaveStatus('Saved');
+    go(9);
+  }catch(err){
+    errorBox('portfolioError',err.message);
+  }
+}
+
+function voiceToggle(){
+  if(!('SpeechRecognition' in window||'webkitSpeechRecognition' in window)){
+    errorBox('voiceError','Voice recognition is not supported on this browser. Please use Manual Registration.');
+    return;
+  }
+
+  if(recognition){
+    recognition.stop();
+    recognition=null;
+    $('voiceBtn').textContent='Start Speaking';
+    $('voiceStatus').textContent='Stopped';
+    return;
+  }
+
+  const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recognition=new Speech();
+  recognition.lang='en-US';
+  recognition.interimResults=false;
+  recognition.maxAlternatives=1;
+
+  recognition.onstart=()=>{
+    $('voiceBtn').textContent='Stop Speaking';
+    $('voiceStatus').textContent='Listening…';
+  };
+
+  recognition.onerror=()=>{
+    $('voiceStatus').textContent='Recognition failed';
+    errorBox('voiceError','Voice recognition failed. Please retry or use Manual Registration.');
+    recognition=null;
+    $('voiceBtn').textContent='Start Speaking';
+  };
+
+  recognition.onend=()=>{
+    recognition=null;
+    $('voiceBtn').textContent='Start Speaking';
+  };
+
+  recognition.onresult=e=>{
+    const text=e.results[0][0].transcript;
+    if(!state.producer.fullName)state.producer.fullName=text;
+    else if(!state.producer.producerName)state.producer.producerName=text;
+    else if(!state.producer.location)state.producer.location=text;
+    else if(!state.producer.genre)state.producer.genre=text;
+    $('voiceStatus').textContent='Captured: '+text;
+    saveLocal();
+  };
+
+  recognition.start();
+}
+
+function finishVoice(){
+  if(!state.producer.fullName){
+    errorBox('voiceError','Please provide your information using voice or switch to Manual Registration.');
+    return;
+  }
+  go(4);
+}
+
+async function toggleRecording(){
+  if(mediaRecorder&&mediaRecorder.state==='recording'){
+    mediaRecorder.stop();
+    return;
+  }
+
+  try{
+    errorBox('recordError','');
+    analytics('interview_started');
+
+    mediaStream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+    $('preview').srcObject=mediaStream;
+
+    recordedBlob=null;
+    const chunks=[];
+    mediaRecorder=new MediaRecorder(mediaStream);
+
+    mediaRecorder.ondataavailable=e=>{
+      if(e.data.size)chunks.push(e.data);
+    };
+
+    mediaRecorder.onstop=()=>{
+      recordedBlob=new Blob(chunks,{type:mediaRecorder.mimeType||'video/webm'});
+      if(mediaStream)mediaStream.getTracks().forEach(t=>t.stop());
+      $('preview').srcObject=null;
+      $('recordStatus').textContent='Recording ready for review.';
+      $('recordBtn').textContent='Start Recording';
+      $('interviewContinue').disabled=false;
+    };
+
+    mediaRecorder.start();
+    $('recordStatus').textContent='Recording…';
+    $('recordBtn').textContent='Stop Recording';
+  }catch(err){
+    errorBox('recordError','Camera/microphone access failed. Please allow permission and retry.');
+  }
+}
+
+function resetRecording(){
+  recordedBlob=null;
+  state.interview={completed:false};
+  $('interviewContinue').disabled=true;
+  $('recordStatus').textContent='Ready to record.';
+  $('recordBtn').textContent='Start Recording';
+  if(mediaStream)mediaStream.getTracks().forEach(t=>t.stop());
+}
+
+async function saveInterview(){
+  if(!recordedBlob){
+    errorBox('recordError','A completed recording is required.');
+    return;
+  }
+
+  try{
+    state.interview={
+      completed:true,
+      mimeType:recordedBlob.type,
+      size:recordedBlob.size,
+      recordedAt:new Date().toISOString()
+    };
+
+    await patchApplication({interview:state.interview});
+    analytics('interview_completed');
+    saveLocal();
+    setSaveStatus('Interview saved');
+    go(10);
+  }catch(err){
+    errorBox('recordError',err.message);
+  }
+}
+
+function renderReview(){
+  const p=state.producer,d=state.dna,o=state.portfolio,i=state.interview;
+  $('reviewContent').innerHTML=`
+    <h3>Producer</h3>
+    <div class="summary">
+      <div><small>Full Name</small>${escapeHtml(p.fullName)}</div>
+      <div><small>Producer Name</small>${escapeHtml(p.producerName)}</div>
+      <div><small>Email</small>${escapeHtml(p.email)}</div>
+      <div><small>Location</small>${escapeHtml(p.location)}</div>
+      <div><small>Genre</small>${escapeHtml(p.genre)}</div>
+    </div>
+    <h3 style="margin-top:25px">Producer DNA</h3>
+    <div class="summary">
+      <div><small>Sound</small>${escapeHtml(d.sound)}</div>
+      <div><small>Strongest Skill</small>${escapeHtml(d.strength)}</div>
+      <div><small>Influences</small>${escapeHtml(d.influences)}</div>
+      <div><small>Mission</small>${escapeHtml(d.mission)}</div>
+    </div>
+    <h3 style="margin-top:25px">Portfolio</h3>
+    <div class="summary">
+      <div><small>Top 1</small>${escapeHtml(o.top1)}</div>
+      <div><small>Top 2</small>${escapeHtml(o.top2)}</div>
+      <div><small>Top 3</small>${escapeHtml(o.top3)}</div>
+    </div>
+    <h3 style="margin-top:25px">Interview</h3>
+    <p>${i.completed?'✓ Interview recording completed and saved.':'Interview incomplete.'}</p>
+  `;
+}
+
+function runApplicationCheck(){
+  const checks=[
+    ['Application identity',!!state.applicationId],
+    ['Full Name',!!state.producer.fullName],
+    ['Producer Name',!!state.producer.producerName],
+    ['Email',!!state.producer.email],
+    ['Location',!!state.producer.location],
+    ['Genre',!!state.producer.genre],
+    ['Consent',state.producer.consent===true],
+    ['Producer DNA',Object.values(state.dna).length===4&&!Object.values(state.dna).some(v=>!v)],
+    ['Portfolio Top 3',!!state.portfolio.top1&&!!state.portfolio.top2&&!!state.portfolio.top3],
+    ['Interview',state.interview.completed===true]
+  ];
+
+  const valid=checks.every(x=>x[1]);
+
+  $('checkContent').innerHTML=checks.map(x=>
+    `<p>${x[1]?'✓':'✕'} ${escapeHtml(x[0])}</p>`
+  ).join('');
+
+  $('submitGo').disabled=!valid;
+  errorBox('checkError',valid?'':'Complete all required items before submitting.');
+}
+
+async function submitApplication(){
+  runApplicationCheck();
+  if($('submitGo').disabled)return;
+
+  go(12);
+  analytics('application_submitted');
+
+  try{
+    const res=await fetch('/api/applications/'+encodeURIComponent(state.applicationId)+'/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'}
+    });
+    const data=await res.json();
+
+    if(!res.ok||!data.success)
+      throw new Error((data.errors||['Submission failed.']).join('\n'));
+
+    state.submitted=true;
+    saveLocal();
+
+    $('successDetails').innerHTML=`
+      <p><strong>Application ID</strong></p>
+      <p>${escapeHtml(data.id)}</p>
+      <p><strong>Submitted</strong></p>
+      <p>${escapeHtml(data.submittedAt||new Date().toISOString())}</p>
+    `;
+
+    analytics('application_success',{applicationId:data.id});
+    go(13);
+  }catch(err){
+    analytics('application_error',{stage:'submission'});
+    errorBox('submitError',err.message||'Submission failed. Please retry.');
+    setTimeout(()=>go(11),1000);
+  }
+}
+
+async function loadApplicationCenter(){
+  if(!state.applicationId){
+    errorBox('centerError','No application ID is available. Please resume from your application.');
+    return;
+  }
+
+  $('centerContent').textContent='Loading…';
+
+  try{
+    const res=await fetch('/api/applications/'+encodeURIComponent(state.applicationId));
+    const data=await res.json();
+
+    if(!res.ok||!data.success)
+      throw new Error((data.errors||['Unable to load application.']).join('\n'));
+
+    const a=data.application;
+
+    $('centerContent').innerHTML=`
+      <span class="pill">${escapeHtml(String(a.status||'unknown').toUpperCase())}</span>
+      <h3 style="margin-top:18px">${escapeHtml(a.full_name||'')}</h3>
+      <p class="muted">${escapeHtml(a.email||'')}</p>
+      <p><strong>Application ID:</strong><br>${escapeHtml(a.id)}</p>
+      <p><strong>Created:</strong><br>${escapeHtml(a.created_at||'')}</p>
+      ${a.submitted_at?`<p><strong>Submitted:</strong><br>${escapeHtml(a.submitted_at)}</p>`:''}
+    `;
+
+    errorBox('centerError','');
+  }catch(err){
+    errorBox('centerError',err.message||'Unable to load application. Retry.');
+  }
+}
+
+function escapeHtml(value){
+  return String(value??'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+}
+
+async function resumeFromServer(){
+  if(!state.applicationId)return;
+
+  try{
+    const res=await fetch('/api/applications/'+encodeURIComponent(state.applicationId));
+    if(!res.ok)return;
+    const data=await res.json();
+    if(!data.success)return;
+
+    const a=data.application;
+
+    state.producer={
+      ...state.producer,
+      fullName:a.full_name||state.producer.fullName,
+      email:a.email||state.producer.email,
+      phone:a.phone||state.producer.phone,
+      genre:a.role||state.producer.genre,
+      bio:a.message||state.producer.bio,
+      producerName:state.producer.producerName,
+      location:state.producer.location
+    };
+
+    state.dna=a.producer_dna||state.dna;
+    state.portfolio=a.portfolio||state.portfolio;
+    state.interview=a.interview||state.interview;
+    state.submitted=a.status==='submitted';
+
+    saveLocal();
+    setSaveStatus('Server draft loaded');
+  }catch(e){}
+}
+
+loadLocal();
+resumeFromServer();
+
+analytics('funnel_view');
+
+if(state.step>1 && !state.submitted){
+  go(Math.min(state.step,TOTAL));
+}
+</script>
 </body>
 </html>
