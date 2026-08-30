@@ -799,9 +799,31 @@ async function saveInterview(){
     return;
   }
 
+  const btn=$('interviewContinue');
+  btn.disabled=true;
+  btn.textContent='Uploading…';
+  errorBox('recordError','');
+
   try{
+    // Upload the actual binary recording. The interview is NOT marked
+    // complete until the server confirms durable persistence.
+    const uploadRes=await fetch(
+      '/api/applications/'+encodeURIComponent(state.applicationId)+'/interview-media',
+      {
+        method:'POST',
+        headers:{'Content-Type':recordedBlob.type||'video/webm'},
+        body:recordedBlob
+      }
+    );
+    const uploadData=await uploadRes.json();
+
+    if(!uploadRes.ok||!uploadData.success||uploadData.mediaStatus!=='complete'){
+      throw new Error((uploadData.errors||['Upload failed. Please retry.']).join('\n'));
+    }
+
     state.interview={
       completed:true,
+      mediaId:uploadData.mediaId,
       mimeType:recordedBlob.type,
       size:recordedBlob.size,
       recordedAt:new Date().toISOString()
@@ -811,9 +833,15 @@ async function saveInterview(){
     analytics('interview_completed');
     saveLocal();
     setSaveStatus('Interview saved');
+    btn.textContent='Use Answer & Continue';
     go(10);
   }catch(err){
-    errorBox('recordError',err.message);
+    // Upload or save failed: interview remains incomplete. No false success.
+    state.interview={completed:false};
+    saveLocal();
+    errorBox('recordError',err.message||'Upload failed. Please retry.');
+    btn.disabled=false;
+    btn.textContent='Retry Upload';
   }
 }
 
