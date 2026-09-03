@@ -1,11 +1,12 @@
 {
   "name": "amp-producer-funnel",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
-  "description": "AMP Producer Registration Funnel — Phase 1 (PostgreSQL persistence)",
+  "description": "AMP Producer Registration Funnel — Phase 1 (PostgreSQL persistence + durable interview media)",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test tests/"
   },
   "engines": {
     "node": ">=18"

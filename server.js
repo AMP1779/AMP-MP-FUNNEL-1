@@ -81,6 +81,32 @@ CREATE TABLE IF NOT EXISTS applications (
 
 CREATE INDEX IF NOT EXISTS idx_applications_status
 ON applications(status);
+
+CREATE TABLE IF NOT EXISTS interview_media (
+  id UUID PRIMARY KEY,
+
+  application_id UUID NOT NULL
+    REFERENCES applications(id)
+    ON DELETE CASCADE,
+
+  mime_type TEXT NOT NULL,
+
+  size_bytes INTEGER NOT NULL,
+
+  sha256 TEXT NOT NULL,
+
+  media_bytes BYTEA NOT NULL,
+
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+
+  CONSTRAINT interview_media_app_sha_unique
+    UNIQUE (application_id, sha256)
+);
+
+CREATE INDEX IF NOT EXISTS idx_interview_media_application
+ON interview_media(application_id);
 `;
 
 async function runMigration() {
@@ -111,6 +137,17 @@ app.use(
 
 const EMAIL_REGEX =
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/* Interview media constraints */
+const ALLOWED_MEDIA_TYPES = new Set([
+  'video/webm',
+  'video/mp4',
+  'audio/webm',
+  'audio/mp4',
+  'audio/ogg',
+  'audio/mpeg',
+]);
+const MAX_MEDIA_BYTES = 75 * 1024 * 1024; // 75MB
 
 
 function validateRegistration(body) {
@@ -457,6 +494,197 @@ app.post(
 
 
 /* ==================================================
+   INTERVIEW MEDIA — DURABLE UPLOAD
+================================================== */
+
+/*
+ * Accepts raw binary media (never base64). Rejects empty
+ * uploads, unsupported types, and oversized payloads.
+ * Idempotent on (application_id, sha256): a retry of the
+ * exact same bytes returns the existing record rather than
+ * creating a duplicate.
+ */
+
+app.post(
+  '/api/applications/:id/interview-media',
+
+  express.raw({
+    type: (req) => ALLOWED_MEDIA_TYPES.has(req.headers['content-type']),
+    limit: MAX_MEDIA_BYTES + 1024,
+  }),
+
+  async (req, res) => {
+
+    if (!pool) {
+      return res.status(503).json({
+        success: false,
+        errors: ['Database is not configured.'],
+      });
+    }
+
+    const contentType = req.headers['content-type'];
+
+    if (!ALLOWED_MEDIA_TYPES.has(contentType)) {
+      return res.status(400).json({
+        success: false,
+        errors: [`Unsupported media type: ${contentType || 'none'}`],
+      });
+    }
+
+    if (!Buffer.isBuffer(req.body) || req.body.length === 0) {
+      return res.status(400).json({
+        success: false,
+        errors: ['Empty upload is not allowed.'],
+      });
+    }
+
+    if (req.body.length > MAX_MEDIA_BYTES) {
+      return res.status(413).json({
+        success: false,
+        errors: ['Media exceeds the maximum allowed size.'],
+      });
+    }
+
+    try {
+      const appResult = await pool.query(
+        `SELECT id, status FROM applications WHERE id = $1`,
+        [req.params.id]
+      );
+
+      if (appResult.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          errors: ['Application not found.'],
+        });
+      }
+
+      if (appResult.rows[0].status !== 'draft') {
+        return res.status(409).json({
+          success: false,
+          errors: ['Application is no longer editable.'],
+        });
+      }
+
+      const sha256 = crypto
+        .createHash('sha256')
+        .update(req.body)
+        .digest('hex');
+
+      const existing = await pool.query(
+        `SELECT id, mime_type, size_bytes, sha256
+         FROM interview_media
+         WHERE application_id = $1 AND sha256 = $2`,
+        [req.params.id, sha256]
+      );
+
+      if (existing.rows.length > 0) {
+        return res.status(200).json({
+          success: true,
+          mediaId: existing.rows[0].id,
+          mediaStatus: 'complete',
+          sha256: existing.rows[0].sha256,
+          sizeBytes: existing.rows[0].size_bytes,
+          deduplicated: true,
+        });
+      }
+
+      const mediaId = crypto.randomUUID();
+
+      await pool.query(
+        `INSERT INTO interview_media (
+          id, application_id, mime_type, size_bytes, sha256, media_bytes
+        ) VALUES ($1, $2, $3, $4, $5, $6)`,
+        [mediaId, req.params.id, contentType, req.body.length, sha256, req.body]
+      );
+
+      return res.status(201).json({
+        success: true,
+        mediaId,
+        mediaStatus: 'complete',
+        sha256,
+        sizeBytes: req.body.length,
+        deduplicated: false,
+      });
+
+    } catch (err) {
+      if (err.code === '23505') {
+        // Race: identical bytes inserted concurrently. Fetch and return it.
+        const row = await pool.query(
+          `SELECT id, size_bytes, sha256 FROM interview_media
+           WHERE application_id = $1 AND sha256 = $2`,
+          [req.params.id, crypto.createHash('sha256').update(req.body).digest('hex')]
+        );
+        if (row.rows.length > 0) {
+          return res.status(200).json({
+            success: true,
+            mediaId: row.rows[0].id,
+            mediaStatus: 'complete',
+            sha256: row.rows[0].sha256,
+            sizeBytes: row.rows[0].size_bytes,
+            deduplicated: true,
+          });
+        }
+      }
+
+      console.error('interview-media upload error', err);
+      return res.status(500).json({
+        success: false,
+        errors: ['Upload failed. Please retry.'],
+      });
+    }
+  }
+);
+
+app.get(
+  '/api/applications/:id/interview-media',
+
+  async (req, res) => {
+    if (!pool) {
+      return res.status(503).json({ success: false, errors: ['Database is not configured.'] });
+    }
+    try {
+      const result = await pool.query(
+        `SELECT id, mime_type, size_bytes, sha256, created_at
+         FROM interview_media WHERE application_id = $1
+         ORDER BY created_at DESC`,
+        [req.params.id]
+      );
+      return res.json({ success: true, media: result.rows });
+    } catch (err) {
+      console.error('interview-media list error', err);
+      return res.status(500).json({ success: false, errors: ['Something went wrong.'] });
+    }
+  }
+);
+
+app.get(
+  '/api/applications/:id/interview-media/content',
+
+  async (req, res) => {
+    if (!pool) {
+      return res.status(503).json({ success: false, errors: ['Database is not configured.'] });
+    }
+    try {
+      const result = await pool.query(
+        `SELECT mime_type, media_bytes FROM interview_media
+         WHERE application_id = $1
+         ORDER BY created_at DESC LIMIT 1`,
+        [req.params.id]
+      );
+      if (result.rows.length === 0) {
+        return res.status(404).json({ success: false, errors: ['No media found.'] });
+      }
+      res.set('Content-Type', result.rows[0].mime_type);
+      return res.send(result.rows[0].media_bytes);
+    } catch (err) {
+      console.error('interview-media content error', err);
+      return res.status(500).json({ success: false, errors: ['Something went wrong.'] });
+    }
+  }
+);
+
+
+/* ==================================================
    UPDATE APPLICATION DRAFT
 ================================================== */
 
@@ -505,6 +733,40 @@ app.patch(
 
     } = req.body || {};
 
+
+    /*
+     * PATCH SECURITY: interview.completed = true may only be set
+     * if it references a mediaId that the server has durably
+     * persisted for THIS application. A client cannot flip this
+     * flag by simply sending {completed:true}.
+     */
+    if (interview && interview.completed === true) {
+      if (!interview.mediaId) {
+        return res.status(400).json({
+          success: false,
+          errors: ['interview.completed requires a verified mediaId.'],
+        });
+      }
+
+      try {
+        const mediaCheck = await pool.query(
+          `SELECT id FROM interview_media WHERE id = $1 AND application_id = $2`,
+          [interview.mediaId, id]
+        );
+        if (mediaCheck.rows.length === 0) {
+          return res.status(400).json({
+            success: false,
+            errors: ['interview.mediaId does not reference a persisted media record for this application.'],
+          });
+        }
+      } catch (err) {
+        console.error('interview media verification error', err);
+        return res.status(500).json({
+          success: false,
+          errors: ['Unable to verify interview media.'],
+        });
+      }
+    }
 
     try {
 
@@ -941,7 +1203,7 @@ app.post(
 
 
       /*
-       * INTERVIEW
+       * INTERVIEW — durable media required, not just a flag.
        */
 
       const interview =
@@ -949,12 +1211,26 @@ app.post(
 
 
       if (
-        interview.completed !== true
+        interview.completed !== true ||
+        !interview.mediaId
       ) {
 
         errors.push(
           'A completed interview is required.'
         );
+
+      } else {
+
+        const mediaCheck = await pool.query(
+          `SELECT id FROM interview_media WHERE id = $1 AND application_id = $2`,
+          [interview.mediaId, req.params.id]
+        );
+
+        if (mediaCheck.rows.length === 0) {
+          errors.push(
+            'A durably persisted interview recording is required.'
+          );
+        }
 
       }
 
